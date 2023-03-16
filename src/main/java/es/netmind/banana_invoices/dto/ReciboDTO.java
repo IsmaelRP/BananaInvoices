@@ -10,6 +10,7 @@ import lombok.Setter;
 @Getter @Setter
 @NoArgsConstructor @AllArgsConstructor
 public class ReciboDTO {
+	private Long id;
 	private Long propietario;
     private Date fecha_emision;
     private Date fecha_vencimiento;
