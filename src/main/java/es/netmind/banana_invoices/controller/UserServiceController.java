@@ -33,5 +33,20 @@ public class UserServiceController {
         userRepository.save(newUser);
         return new ResponseEntity<>(newUser, HttpStatus.CREATED);
     }
+    
+    /*@PutMapping(value = "", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity createUser(@RequestBody @Valid User newUser) {
+//        BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+        String enc_password = newUser.getPassword(); //passwordEncoder.encode(newUser.getPassword());
+
+        userRepository.findById(null)
+        
+        newUser.setPassword(enc_password);
+        userRepository.save(newUser);
+        return new ResponseEntity<>(newUser, HttpStatus.CREATED);
+    }
+    */
+    
+    
 
 }
