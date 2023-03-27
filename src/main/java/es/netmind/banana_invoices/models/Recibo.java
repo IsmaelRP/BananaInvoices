@@ -1,68 +1,66 @@
 package es.netmind.banana_invoices.models;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
-import java.util.Date;
+import javax.persistence.*;
+import java.time.LocalDate;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Set;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.Table;
-
+@Getter
+@Setter
+@NoArgsConstructor
+@RequiredArgsConstructor
+@ToString
 @Entity
 @Table(name = "recibo")
-@Getter @Setter
-@NoArgsConstructor @AllArgsConstructor
 public class Recibo {
-	
-	@Id @GeneratedValue(strategy = GenerationType.AUTO)
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-	
-	@Column
-    private Long propietario;
-	
-	@Column
-    private Date fecha_emision;
-	
-	@Column
-    private Date fecha_vencimiento;
-	
-	@Column
+    @ManyToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "propietario")
+    private Propietario propietario;
+    private LocalDate fecha_emision;
+    @NonNull
+    private LocalDate fecha_vencimiento;
     private String nombre_contacto;
-	
-	@Column
     private String direccion_contacto;
-	
-	@Column
     private String direccion_envio;
-	
-	@Column
+    @NonNull
     private String nombre_producto;
-	
-	@Column
+    @NonNull
     private int cantidad;
-	
-	@Column
+    @NonNull
     private float precio_unitario;
-	
-	@Column
+    @NonNull
     private double base_imponible;
-	
-	@Column
+    @NonNull
     private float impuestos;
-	
-	@Column
+    @NonNull
     private double total;
-	
-	@Column
+    @NonNull
     private boolean estado;
-	
-	@Column
+    @NonNull
     private boolean valido;
 
+    public double calcular_total() {
+        return base_imponible + base_imponible * impuestos;
+    }
+
+    public Set<String> esValido() {
+        Set errores = new HashSet();
+
+        if (!(propietario != null && propietario.getPid() > 0)) errores.add("propietario:" + propietario);
+        if (fecha_vencimiento == null) errores.add("fecha_vencimiento:"+fecha_vencimiento);
+        if (!(nombre_producto != null && !nombre_producto.trim().equals(""))) errores.add("nombre_producto:"+nombre_producto);
+        if (cantidad <= 0) errores.add("cantidad:"+cantidad);
+        if (precio_unitario <= 0) errores.add("precio_unitario:"+precio_unitario);
+        if (base_imponible <= 0 || (base_imponible != cantidad * precio_unitario)) errores.add("base_imponible:"+base_imponible);
+        if (impuestos < 0) errores.add("impuestos:"+impuestos);
+        if (total != calcular_total()) errores.add("total:"+total);
+
+        return errores;
+    }
 }
