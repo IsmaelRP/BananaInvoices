@@ -35,13 +35,10 @@ public class ReciboServiceController {
 	@PostMapping(value = "", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Recibo> addRecibo(@RequestBody Recibo recibo) {
 		
-		if (repository.findById(recibo.getId()) == null) {
+		//if (repository.findById(recibo.getId()) == null) {
 			repository.save(recibo);
-			return new ResponseEntity<>(recibo, HttpStatus.CREATED);
-		}else {
-			
-			//return new ResponseStatusException(HttpStatus.CREATED);
-		}
+			return new ResponseEntity<Recibo>(recibo, HttpStatus.CREATED);
+		//}
 
     }
 	

@@ -30,18 +30,22 @@ public class PropietarioServiceController {
 	
 
 	@PostMapping(value = "", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Recibo> addPropietario(@RequestBody Propietario propietario) {
+    public ResponseEntity<Propietario> addPropietario(@RequestBody Propietario propietario) {
 		repository.save(propietario);
+		return new ResponseEntity<Propietario>(propietario, HttpStatus.CREATED);
+
     }
 	
 	@GetMapping(value = "/asocia", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Recibo> asociaPropietario(@RequestParam Long idPropietario, @RequestParam Long idRecibo) {
+    public ResponseEntity<Propietario> asociaPropietario(@RequestParam Long idPropietario, @RequestParam Long idRecibo) {
 		
 		Recibo r = reciboRepository.findById(idRecibo);
 		Propietario p = repository.findById(idPropietario);
 		r.setPropietario(p);
 		
 		reciboRepository.save(r);
+		return new ResponseEntity<Propietario>(p, HttpStatus.CREATED);
+
 		
     }
 	
